@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { fmtDate, excerpt } from '../../lib/dennik';
+
+const all = (await getCollection('dennik')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const count = all.length;
+let lastYear = 0;
+---
+
+<Layout title="Denník" active="dennik">
+  <section class="section section--tight" style="background: var(--paper-2); border-bottom: 1px solid var(--line);">
+    <div class="container">
+      <span class="kicker">Denník</span>
+      <h1 style="margin-top: 0.6rem;">Denník situácií</h1>
+      <p style="margin-top: 1rem; color: var(--ink-soft); font-size: 1.15rem; max-width: 56ch;">
+        Vecné záznamy o tom, čo sa na úseku deje. Bez emócií — dátum, miesto a
+        krátky popis. Slúži to ako prehľad, nie ako zoznam obvinení.
+      </p>
+      <div style="margin-top: 1.6rem;">
+        <div class="stat">
+          <span class="stat__num">{count}</span>
+          <span class="stat__label">záznamov spolu</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow" style="margin-inline: auto;">
+      {
+        all.length === 0 ? (
+          <p class="note">Zatiaľ tu nie je žiadny záznam.</p>
+        ) : (
+          <ol class="timeline">
+            {all.map((e) => {
+              const y = e.data.date.getFullYear();
+              const showYear = y !== lastYear;
+              lastYear = y;
+              return (
+                <Fragment>
+                  {showYear && <li class="year-sep" aria-hidden="true">{y}</li>}
+                  <li class="entry">
+                    <div class="entry__rail">
+                      <span class="entry__dot" />
+                      <span class="entry__line" />
+                    </div>
+                    <div>
+                      <span class="chip-date">
+                        {fmtDate(e.data.date)}
+                        {e.data.time && <span class="chip-date__time">· {e.data.time}</span>}
+                      </span>
+                      <h3 style="margin-top: 0.6rem;">
+                        <a href={`/dennik/${e.id}`}>{e.data.title}</a>
+                      </h3>
+                      <div class="entry__meta">
+                        <span class="tag">{e.data.location}</span>
+                        {e.data.vehicle && <span class="tag">{e.data.vehicle}</span>}
+                      </div>
+                      <p class="entry__excerpt">{excerpt(e.body, 160)}</p>
+                      <a class="entry__more" href={`/dennik/${e.id}`}>
+                        <span>Čítať celé</span> <span class="arrow">→</span>
+                      </a>
+                    </div>
+                  </li>
+                </Fragment>
+              );
+            })}
+          </ol>
+        )
+      }
+    </div>
+  </section>
+</Layout>

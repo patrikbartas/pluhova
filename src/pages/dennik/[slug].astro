@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { fmtDate } from '../../lib/dennik';
+
+export async function getStaticPaths() {
+  const items = (await getCollection('dennik')).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+  );
+  return items.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      newer: items[i - 1] ?? null,
+      older: items[i + 1] ?? null,
+    },
+  }));
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
+
+const cover = entry.data.cover
+  ? entry.data.cover.startsWith('/')
+    ? entry.data.cover
+    : `/dennik/${entry.data.cover}`
+  : null;
+---
+
+<Layout title={entry.data.title} active="dennik">
+  <article class="section">
+    <div class="container container--narrow" style="margin-inline: auto;">
+      <a class="entry__more" href="/dennik" style="margin-bottom: 1.5rem;">
+        <span class="arrow" style="display:inline-block; transform: rotate(180deg);">→</span>
+        <span>Denník</span>
+      </a>
+
+      <div style="margin-top: 0.5rem;">
+        <span class="chip-date">
+          {fmtDate(entry.data.date)}
+          {entry.data.time && <span class="chip-date__time">· {entry.data.time}</span>}
+        </span>
+      </div>
+
+      <h1 style="margin: 1rem 0 0; font-size: clamp(2rem, 4.5vw, 3.2rem);">
+        {entry.data.title}
+      </h1>
+
+      <div class="entry__meta" style="margin: 1.1rem 0 0;">
+        <span class="tag">{entry.data.location}</span>
+        {entry.data.vehicle && <span class="tag">{entry.data.vehicle}</span>}
+      </div>
+
+      {
+        cover && (
+          <img
+            src={cover}
+            alt={entry.data.title}
+            style="margin-top: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--line);"
+          />
+        )
+      }
+
+      <hr class="lane-divider" style="margin: 2rem 0;" />
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <nav style="display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); flex-wrap:wrap;">
+        {newer ? <a class="btn btn--ghost" href={`/dennik/${newer.id}`}>← Novší záznam</a> : <span></span>}
+        {older ? <a class="btn btn--ghost" href={`/dennik/${older.id}`}>Starší záznam →</a> : <span></span>}
+      </nav>
+    </div>
+  </article>
+</Layout>

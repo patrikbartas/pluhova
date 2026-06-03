@@ -1,0 +1,181 @@
+---
+// Podpisová schéma úseku: jednosmerná ulica s jedným pruhom.
+// Auto ide zhora nadol, bicykel má povolený protismer (nahor, vpravo).
+// Vľavo parkujú autá s vynechanými miestami na obiehanie.
+//
+// `animated`:
+//   false (predvolené) → statické šípky, nič sa nehýbe (domovská stránka)
+//   true               → auto vybočí do blikajúcej medzery, počká, kým ho
+//                        cyklista minie, a pokračuje (stránka Situácia).
+//                        Pohyb cez SMIL, aby fungoval aj v Safari / pri Reduce Motion.
+interface Props {
+  tone?: 'dark' | 'light';
+  animated?: boolean;
+}
+const { tone = 'dark', animated = false } = Astro.props;
+
+// Zaparkované autá vľavo (y), s dvoma vynechanými miestami.
+const parked = [16, 60, 148, 192, 280, 324, 368];
+const gaps = [104, 236];
+// Dlažba na chodníkoch.
+const pave = [48, 96, 144, 192, 240, 288, 336, 384, 432];
+---
+
+<figure class={`lane-fig lane-fig--${tone}`}>
+  <svg
+    class="lane"
+    viewBox="0 0 320 460"
+    role="img"
+    aria-labelledby="laneTitle laneDesc"
+  >
+    <title id="laneTitle">Pluhová: jednosmerka pre autá, protismer povolený pre bicykle</title>
+    <desc id="laneDesc">
+      Schéma úseku — jednosmerná ulica s jedným pruhom. Auto ide nadol, bicykel
+      smie v povolenom protismere nahor. Vľavo parkujú autá s vynechanými
+      miestami na obiehanie.
+    </desc>
+
+    <!-- Podklad / obrubníkový rám -->
+    <rect x="0" y="0" width="320" height="460" rx="18" fill="#1d2128" />
+
+    <!-- Chodníky po oboch stranách -->
+    <rect x="8" y="8" width="34" height="444" fill="#3a4049" />
+    <rect x="278" y="8" width="34" height="444" fill="#3a4049" />
+    {
+      pave.map((y) => (
+        <Fragment>
+          <line x1="8" y1={y} x2="42" y2={y} stroke="#2f343d" stroke-width="1" />
+          <line x1="278" y1={y} x2="312" y2={y} stroke="#2f343d" stroke-width="1" />
+        </Fragment>
+      ))
+    }
+
+    <!-- Vozovka (jeden pruh, bez stredovej čiary) -->
+    <rect x="42" y="8" width="236" height="444" fill="#2a2f38" />
+    <line x1="42" y1="8" x2="42" y2="452" stroke="#4d545e" stroke-width="2" />
+    <line x1="278" y1="8" x2="278" y2="452" stroke="#4d545e" stroke-width="2" />
+
+    <!-- Zaparkované autá vľavo -->
+    {
+      parked.map((y) => (
+        <Fragment>
+          <rect x="50" y={y} width="34" height="40" rx="5" fill="#14161b" stroke="#4a515b" stroke-width="1.5" />
+          <rect x="54" y={y + 6} width="26" height="9" rx="2" fill="#353b44" />
+        </Fragment>
+      ))
+    }
+
+    <!-- Vynechané miesta na obiehanie (na Situácii blikajú) -->
+    {
+      gaps.map((y) => (
+        <rect x="50" y={y} width="34" height="40" rx="5" fill="#ffd21a" fill-opacity="0.12" stroke="#ffd21a" stroke-width="2" stroke-dasharray="5 4">
+          {animated && (
+            <animate attributeName="opacity" values="1;0.25;1" dur="1.3s" repeatCount="indefinite" />
+          )}
+        </rect>
+      ))
+    }
+
+    <!-- Popisky smerov -->
+    <text x="150" y="26" text-anchor="middle" class="lane__lbl lane__lbl--mute">AUTÁ</text>
+    <text x="232" y="442" text-anchor="middle" class="lane__lbl lane__lbl--hivis">BICYKLE</text>
+
+    {
+      animated ? (
+        <Fragment>
+          {/* Bicykel: protismer, plynule stúpa vpravo */}
+          <g stroke="#ffd21a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="0" y1="16" x2="0" y2="-12" />
+            <path d="M0 -16 l-8 12 M0 -16 l8 12" />
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="translate"
+              dur="6.5s"
+              repeatCount="indefinite"
+              calcMode="linear"
+              keyTimes="0; 0.46; 0.52; 0.58; 1"
+              values="232,500; 232,172; 232,124; 232,80; 232,-44"
+            />
+          </g>
+          {/* Auto: nadol, vybočí do medzery a počká */}
+          <g stroke="#aeb4bd" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="0" y1="-16" x2="0" y2="12" />
+            <path d="M0 16 l-8 -12 M0 16 l8 -12" />
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="translate"
+              dur="6.5s"
+              repeatCount="indefinite"
+              calcMode="linear"
+              keyTimes="0; 0.2; 0.33; 0.55; 0.67; 1"
+              values="150,-40; 150,64; 67,124; 67,124; 150,168; 150,504"
+            />
+          </g>
+        </Fragment>
+      ) : (
+        <Fragment>
+          {/* Statické šípky */}
+          <g stroke="#9aa0ab" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="150" y1="64" x2="150" y2="372" />
+            <path d="M150 372 l-8 -12 M150 372 l8 -12" />
+          </g>
+          <g stroke="#ffd21a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="232" y1="396" x2="232" y2="88" />
+            <path d="M232 88 l-9 13 M232 88 l9 13" />
+          </g>
+        </Fragment>
+      )
+    }
+  </svg>
+
+  <ul class="lane-legend">
+    <li><span class="sw sw--bike"></span> Bicykle — povolený protismer (↑)</li>
+    <li><span class="sw sw--car"></span> Autá — jednosmerka (↓)</li>
+    <li><span class="sw sw--gap"></span> Vynechané miesta na obiehanie</li>
+    <li><span class="sw sw--walk"></span> Chodníky po oboch stranách</li>
+  </ul>
+</figure>
+
+<style>
+  .lane-fig { margin: 0; }
+  .lane {
+    width: 100%;
+    height: auto;
+    max-width: 22rem;
+    margin-inline: auto;
+    display: block;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.35));
+    border-radius: 18px;
+  }
+  .lane__lbl {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .lane__lbl--hivis { fill: #ffd21a; }
+  .lane__lbl--mute { fill: #9aa0ab; }
+
+  .lane-legend {
+    list-style: none;
+    padding: 0;
+    margin: 1.1rem auto 0;
+    max-width: 22rem;
+    display: grid;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.02em;
+  }
+  .lane-legend li { display: flex; align-items: center; gap: 0.6rem; }
+  .lane-fig--dark .lane-legend { color: var(--on-dark-soft); }
+  .lane-fig--light .lane-legend { color: var(--ink-soft); }
+
+  .sw { flex: none; display: inline-block; }
+  .sw--bike { width: 1.5rem; height: 0; border-top: 4px solid #ffd21a; }
+  .sw--car { width: 1.5rem; height: 0; border-top: 3.5px solid #9aa0ab; }
+  .sw--gap { width: 1rem; height: 1rem; border: 2px dashed #e6a700; border-radius: 3px; }
+  .sw--walk { width: 1rem; height: 1rem; background: #3a4049; border: 1px solid var(--line-strong); border-radius: 3px; }
+</style>

@@ -1,0 +1,135 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  active?: 'domov' | 'situacia' | 'legislativa' | 'dennik';
+}
+
+const {
+  title,
+  description = 'Pluhová v Bratislave je povolený cyklistický protismer. Stránka vysvetľuje situáciu, legislatívu a vedie denník situácií na ceste.',
+  active,
+} = Astro.props;
+
+const fullTitle = title ? `${title} — Pluhová` : 'Pluhová — cyklistický protismer';
+
+const nav = [
+  { href: '/situacia', label: 'Situácia', key: 'situacia' },
+  { href: '/legislativa', label: 'Legislatíva', key: 'legislativa' },
+  { href: '/dennik', label: 'Denník', key: 'dennik' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#15171c" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="hazard-tape" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href="/" class="brand" aria-label="Pluhová — domov">
+          <svg viewBox="0 0 32 32" class="brand__mark" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill="#15171c" />
+            <path
+              d="M12 7 v12 m0 0 l-3 -3 m3 3 l3 -3"
+              stroke="#a7adb8"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M20 25 v-12 m0 0 l-3 3 m3 -3 l3 3"
+              stroke="#ffd21a"
+              stroke-width="2.4"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="brand__name">Pluhová<span>.</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Hlavná navigácia">
+          {
+            nav.map((item) => (
+              <a href={item.href} aria-current={active === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom: 1rem;">
+              <svg viewBox="0 0 32 32" class="brand__mark" aria-hidden="true">
+                <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill="#0f1115" />
+                <path d="M12 7 v12 m0 0 l-3 -3 m3 3 l3 -3" stroke="#a7adb8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M20 25 v-12 m0 0 l-3 3 m3 -3 l3 3" stroke="#ffd21a" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="brand__name" style="color: var(--on-dark);">Pluhová<span>.</span></span>
+            </div>
+            <p style="max-width: 34ch; font-size: 0.95rem; line-height: 1.55;">
+              Občianska stránka o jednom úseku cesty, kde sa každodenne stretáva
+              jednosmerka pre autá s povoleným cyklistickým protismerom.
+            </p>
+          </div>
+
+          <div>
+            <h4>Web</h4>
+            <ul>
+              <li><a href="/situacia">Situácia</a></li>
+              <li><a href="/legislativa">Legislatíva</a></li>
+              <li><a href="/dennik">Denník</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>Zdroje</h4>
+            <ul>
+              <li><a href="https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2009/8/" rel="noopener" target="_blank">Zákon č. 8/2009 Z. z.</a></li>
+              <li><a href="https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2020/30/" rel="noopener" target="_blank">Vyhláška č. 30/2020 Z. z.</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© {year} · Pluhová · Bratislava</span>
+          <span>Občianska iniciatíva — nie je to právne poradenstvo.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

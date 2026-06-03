@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const overeneK = '3. 6. 2026';
+---
+
+<Layout title="Legislatíva" active="legislativa">
+  <section class="section section--tight" style="background: var(--paper-2); border-bottom: 1px solid var(--line);">
+    <div class="container">
+      <span class="kicker">Legislatíva</span>
+      <h1 style="margin-top: 0.6rem;">Čo na to hovorí zákon</h1>
+      <p style="margin-top: 1rem; color: var(--ink-soft); font-size: 1.15rem; max-width: 56ch;">
+        Stručný a vecný prehľad pravidiel, ktoré sa tohto úseku týkajú. Nižšie je
+        ku každému bodu odkaz na oficiálny prameň na Slov-Lexe.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow" style="margin-inline: auto;">
+      <div class="stack" style="--stack-gap: 1.25rem;">
+        <article class="law">
+          <span class="law__tag">Protismer · vyhláška č. 30/2020 Z. z.</span>
+          <blockquote>
+            Dodatková tabuľka „Cyklisti v protismere" pod značkou „Jednosmerná
+            premávka" umožňuje cyklistom jazdiť v oboch smeroch. Vodič iného
+            vozidla je pritom povinný dbať na zvýšenú opatrnosť voči cyklistom.
+          </blockquote>
+          <p class="law__src">
+            Vlastné zhrnutie; presné znenie v
+            <a href="https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2020/30/" rel="noopener" target="_blank">vyhláške č. 30/2020 Z. z. o dopravnom značení</a>.
+          </p>
+        </article>
+
+        <article class="law law--warn">
+          <span class="law__tag">Bočný odstup · zákon č. 8/2009 Z. z.</span>
+          <blockquote>
+            Pri predchádzaní cyklistu musí vodič dodržať bezpečný bočný odstup —
+            najmenej 1 m pri rýchlosti do 50 km/h a najmenej 1,5 m v ostatných
+            prípadoch. Platí od 1. marca 2022.
+          </blockquote>
+          <p class="law__src">
+            Vlastné zhrnutie; presné znenie v
+            <a href="https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2009/8/" rel="noopener" target="_blank">zákone č. 8/2009 Z. z. o cestnej premávke</a>.
+          </p>
+        </article>
+
+        <article class="law law--warn">
+          <span class="law__tag">Odbočovanie · zákon č. 8/2009 Z. z.</span>
+          <blockquote>
+            Pri odbočovaní vpravo musí vodič dať prednosť cyklistovi idúcemu rovno.
+            Pri odbočovaní vľavo nesmie cyklistu ohroziť.
+          </blockquote>
+          <p class="law__src">
+            Vlastné zhrnutie; presné znenie v
+            <a href="https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2009/8/" rel="noopener" target="_blank">zákone č. 8/2009 Z. z.</a>.
+          </p>
+        </article>
+
+        <article class="law">
+          <span class="law__tag">Všeobecne</span>
+          <blockquote>
+            Vodič sa musí správať ohľaduplne a nesmie ohroziť cyklistu. Cyklista
+            smie ísť v protismere len tam, kde to dopravné značenie povoľuje —
+            na tomto úseku to povolené je.
+          </blockquote>
+          <p class="law__src">Súhrn pravidiel z predpisov vyššie.</p>
+        </article>
+
+        <p class="note">
+          ⚠️ Toto je laický prehľad občana, <strong>nie právne poradenstvo</strong>.
+          Presné a aktuálne znenie nájdeš v oficiálnych prameňoch na Slov-Lexe
+          (odkazy vyššie a v päte). Overené k {overeneK}.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

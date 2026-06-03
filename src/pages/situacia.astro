@@ -1,0 +1,131 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Lane from '../components/Lane.astro';
+
+const photos = [
+  'Začiatok úseku — dodatková tabuľka pod jednosmerkou',
+  'Vynechané miesto v parkovaní (na obiehanie)',
+  'Pohľad v povolenom protismere',
+];
+---
+
+<Layout title="Situácia" active="situacia">
+  <section class="section section--tight" style="background: var(--paper-2); border-bottom: 1px solid var(--line);">
+    <div class="container">
+      <span class="kicker">Situácia</span>
+      <h1 style="margin-top: 0.6rem;">Ako to na Pluhovej vyzerá</h1>
+      <p style="margin-top: 1rem; color: var(--ink-soft); font-size: 1.15rem; max-width: 54ch;">
+        Úzka jednosmerná ulica. Autá idú jedným smerom, bicykle majú povolený
+        protismer. Vpravo sa parkuje — a presne na obiehanie slúžia vynechané miesta.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="situacia-grid">
+        <div class="stack">
+          <h2>Jeden úsek, dva smery</h2>
+          <p>
+            Pluhová je v tomto úseku jednosmerná pre autá. Pre bicykle je povolený
+            aj opačný smer — takzvaný <strong>cyklistický protismer</strong>.
+            Znamená to, že cyklista ide úplne legálne „oproti" autám.
+          </p>
+          <p>
+            Po pravej strane sú zaparkované autá, takže priestoru je málo. Aby sa
+            protiidúci zmestili, v parkovaní sú zámerne <strong>vynechané miesta</strong>
+            — krátke zálivy, kde sa dá počkať alebo uhnúť. Celý systém funguje, len
+            ak ich obe strany využívajú.
+          </p>
+
+          <ul class="facts">
+            <li><strong>Šírka:</strong> úzka vozovka, dve vozidlá oproti sa reálne nezmestia.</li>
+            <li><strong>Parkovanie:</strong> po pravej strane, v smere jazdy áut.</li>
+            <li><strong>Vynechané miesta:</strong> slúžia na vyhnutie sa protiidúcim.</li>
+            <li><strong>Značenie:</strong> dodatková tabuľka na začiatku aj na konci úseku.</li>
+          </ul>
+        </div>
+
+        <div>
+          <Lane tone="light" animated />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="lane-divider" />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Ako sa minúť</span>
+        <h2>Pár sekúnd a prejdeme obaja</h2>
+        <p>Žiadne pravidlá navyše — len využiť to, čo na ulici už je.</p>
+      </div>
+
+      <ol class="steps">
+        <li><div><strong>Vidíme sa zavčasu.</strong> Úsek je rovný a prehľadný, protiidúceho zbadáte zďaleka.</div></li>
+        <li><div><strong>Kto je bližšie k vynechanému miestu, využije ho.</strong> Zastaviť či spomaliť na pár sekúnd stačí.</div></li>
+        <li><div><strong>Míňame sa pomaly a s odstupom.</strong> Žiadne tlačenie cyklistu k zaparkovaným autám.</div></li>
+        <li><div><strong>Prejdeme obaja.</strong> Zopár stratených sekúnd — a nikto nikoho neohrozil.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--paper-2); border-top: 1px solid var(--line);">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Fotky</span>
+        <h2>Ako to vyzerá v teréne</h2>
+        <p>Fotodokumentáciu sem postupne doplníme — značenie, parkovanie aj vynechané miesta.</p>
+      </div>
+
+      <div class="grid">
+        {
+          photos.map((caption) => (
+            <figure class="figure">
+              <div class="figure__ph">fotka — doplníme</div>
+              <figcaption>{caption}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .situacia-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .facts {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.6rem;
+  }
+  .facts li {
+    padding-left: 1.4rem;
+    position: relative;
+    color: var(--ink-soft);
+  }
+  .facts li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--hivis);
+    box-shadow: 0 0 0 1px var(--hivis-deep) inset;
+  }
+  .facts strong { color: var(--ink); }
+
+  @media (max-width: 800px) {
+    .situacia-grid { grid-template-columns: 1fr; }
+  }
+</style>

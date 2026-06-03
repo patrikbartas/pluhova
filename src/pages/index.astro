@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Lane from '../components/Lane.astro';
+import { getCollection } from 'astro:content';
+import { fmtDate } from '../lib/dennik';
+
+const all = (await getCollection('dennik')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const latest = all.slice(0, 3);
+const count = all.length;
+---
+
+<Layout active="domov">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div>
+        <span class="kicker kicker--light reveal" data-d="1">Cyklistický protismer · Pluhová, Bratislava</span>
+        <h1 class="reveal" data-d="2">
+          Jednosmerka pre autá.<br /><em>Protismer pre bicykle.</em>
+        </h1>
+        <p class="hero__lead reveal" data-d="3">
+          Úsek, kadiaľ jazdím každé ráno do práce. Cyklistický protismer je tu
+          povolený — no autá ma pravidelne ohrozujú. Táto stránka vysvetľuje
+          situáciu, zhŕňa legislatívu a vedie pokojný denník toho, čo sa deje.
+        </p>
+        <div class="hero__cta reveal" data-d="4">
+          <a class="btn btn--primary" href="/situacia">Ako to funguje <span class="arrow">→</span></a>
+          <a class="btn btn--on-dark" href="/legislativa">Čo hovorí zákon</a>
+        </div>
+        <div class="hero__stats reveal" data-d="5">
+          <div class="stat">
+            <span class="stat__num">{count}</span>
+            <span class="stat__label">záznamov</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">1–1,5 m</span>
+            <span class="stat__label">povinný odstup</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num" style="color: var(--hivis);">↑</span>
+            <span class="stat__label">protismer povolený</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__diagram reveal" data-d="3">
+        <Lane tone="dark" />
+      </div>
+    </div>
+  </section>
+
+  <hr class="lane-divider" />
+
+  <!-- V SKRATKE -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">V skratke</span>
+        <h2>Tri veci, ktoré tu platia</h2>
+        <p>Nič prevratné — len pravidlá, ktoré na tomto úseku platia a oplatí sa ich poznať.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card card--go">
+          <span class="card__idx">01</span>
+          <h3>Protismer je legálny</h3>
+          <p>
+            Na začiatku aj na konci úseku je dodatková tabuľka, ktorá cyklistom
+            povoľuje jazdu v protismere jednosmerky. Nie je to výnimka — je to značka.
+          </p>
+          <a class="card__link" href="/legislativa">Značka a vyhláška <span class="arrow">→</span></a>
+        </article>
+
+        <article class="card card--warn">
+          <span class="card__idx">02</span>
+          <h3>Vodič musí dať odstup</h3>
+          <p>
+            Pri predchádzaní cyklistu platí povinný bočný odstup najmenej 1 m
+            do 50 km/h, inak 1,5 m. A vodič nesmie cyklistu ohroziť.
+          </p>
+          <a class="card__link" href="/legislativa">Bočný odstup <span class="arrow">→</span></a>
+        </article>
+
+        <article class="card card--info">
+          <span class="card__idx">03</span>
+          <h3>Úsek má miesta na obiehanie</h3>
+          <p>
+            Auto parkuje vpravo, ale v parkovaní sú vynechané miesta. Stačí pri
+            nich počkať pár sekúnd a protiidúci cyklista bezpečne prejde.
+          </p>
+          <a class="card__link" href="/situacia">Pozri schému <span class="arrow">→</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Z DENNÍKA -->
+  <section class="section" style="background: var(--paper-2); border-block: 1px solid var(--line);">
+    <div class="container">
+      <div class="section-head" style="display:flex; justify-content:space-between; align-items:flex-end; max-width:none; gap:1rem; flex-wrap:wrap;">
+        <div style="max-width:44ch;">
+          <span class="kicker">Z denníka</span>
+          <h2>Čo sa stalo naposledy</h2>
+          <p>Vecné záznamy situácií na ceste — dátum, miesto, krátky popis.</p>
+        </div>
+        <a class="btn btn--ghost" href="/dennik">Celý denník <span class="arrow">→</span></a>
+      </div>
+
+      {
+        latest.length === 0 ? (
+          <p class="note">Zatiaľ tu nie je žiadny záznam.</p>
+        ) : (
+          <div class="grid">
+            {latest.map((e) => (
+              <article class="card card--info">
+                <span class="chip-date">
+                  {fmtDate(e.data.date)}
+                  {e.data.time && <span class="chip-date__time">· {e.data.time}</span>}
+                </span>
+                <h3 style="margin-top:0.8rem;">
+                  <a href={`/dennik/${e.id}`}>{e.data.title}</a>
+                </h3>
+                <div class="entry__meta" style="margin:0.6rem 0 0;">
+                  <span class="tag">{e.data.location}</span>
+                  {e.data.vehicle && <span class="tag">{e.data.vehicle}</span>}
+                </div>
+                <a class="card__link" href={`/dennik/${e.id}`}>
+                  Čítať záznam <span class="arrow">→</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
